@@ -4,7 +4,7 @@ gu = require('./gpio_utils')
 
 var insightsApiKey, newrelicAccountId, insightsHost;
 
-// node beacon.js HrurPdQHISZ4ESs8iydk34u7tKHv1zXU 429813 staging-insights-api.newrelic.com
+// node newrelic_insights_beacon.js HrurPdQHISZ4ESs8iydk34u7tKHv1zXU 429813 staging-insights-api.newrelic.com
 if(!process.argv[2]){
 	throw ({'error':'Please supply an New Relic Insights query key'});
 }
