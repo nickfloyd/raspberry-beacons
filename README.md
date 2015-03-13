@@ -118,6 +118,35 @@ node ledborg.js
 
 If all is well you'll see the led on the ledborg board shine blue.  If not go through the troubleshooting steps below - you'll have it glowing blue in no time.
 
+# Running the beacon
+
+Currently there is only one beacon avaiable right now.  Hopefully I'll make more or others will want to do the same.
+
+To run the New Relic Insights beacon against your own data simply:
+
+* Open / edit the newrelic_insights_beacon.js
+* Modify the "query" to something that will retun a count.  Make sure the query is url encoded.  There is currently one in there as an example.
+* Then execute the script via terminal
+
+newrelic_insights_beacon.js [your query api key] [your account id]
+
+ex. 
+```
+node newrelic_insights_beacon.js HrurPdQHISZ4ESs8iydk34u7tKHv1zXU 429813
+```
+
+# Running the beacon headless
+
+Thanks to [weworkweplay](http://weworkweplay.com/play/raspberry-pi-nodejs/) we have an amazingly simple approach to this:
+
+Modify your ```/etc/rc.local``` file adding the following to it:
+
+```
+su pi -c 'node /home/pi/raspberry-beacons/newrelic_insights_beacon.js [your query api key] [your account id] < /dev/null &'
+```
+
+
+
 # Troubleshooting
 
 **gpio-admin: failed to change group ownership of /sys/devices/virtual/gpio/gpio22/direction: No such file or directory**
