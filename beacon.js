@@ -1,5 +1,5 @@
 var http, fs, gpio
-var intervalInMills, setStatusBeacon, insightsRequest, query;
+var intervalInMills, setStatusBeacon, insightsRequest, query, fullPath;
 var RED_PIN = 11, GREEN_PIN = 13, BLUE_PIN = 15;
 
 gpio = require("pi-gpio");
@@ -7,15 +7,17 @@ http = require('http');
 fs = require('fs');
 
 intervalInMills = 300000;
-query = "SELECT%20exception%2C%20subscription%2C%20method%2C%20application%20FROM%20NewRelic_AzurePortal_APM_Requests%20WHERE%20application%20LIKE%20'NR-Stamp%25'%20AND%20exception%20IS%20NOT%20NULL%20SINCE%2024%20hours%20ago%20limit%2050";
+query = "?nrql=SELECT%20count(exception)%20FROM%20NewRelic_AzurePortal_APM_Requests%20WHERE%20application%20LIKE%20'NR-Stamp%25'%20AND%20exception%20IS%20NOT%20NULL%20SINCE%2012%20days%20ago%20limit%2050";
+fullPath = '/v1/accounts/429813/query' + query
 
 insightsRequest = {
-  host: 'https://staging-insights-api.newrelic.com',
+  host: 'staging-insights-api.newrelic.com',
   port: 80,
-  path: '/v1/accounts/429813/query' + query,
+  path: fullPath,
   method: 'GET',
   headers: {
-    'X-Query-Key': 'HrurPdQHISZ4ESs8iydk34u7tKHv1zXE',
+    'Accept:': 'application/json',
+    'X-Query-Key': 'HrurPdQHISZ4ESs8iydk34u7tKHv1zXE'
   }
 };
 
@@ -45,30 +47,38 @@ function writePin(pin){
 
 setStatusBeacon = function() {
   console.log('Updating...');
-  return http.get(insightsRequest, function(resp) {
-    var data;
-    data = [];
-
-    resp.setEncoding('utf8');
-    resp.on('data', function(chunk) {
-      return data.push(chunk);
+  return http.get(insightsRequest, function(res){
+    console.log("Got response: " + res.statusCode);
+    
+    var data, results;
+    
+    res.on('data', function (chunk) {
+      if(chunk) {
+        console.log("chunk: " + chunk);
+        data += chunk;
+      }
     });
-    return resp.on('end', function() {
-      var errors;
 
+    return res.on('end', function() {
+      data = data.replace("undefined","")
+      results = JSON.parse(data).results[0].count;
+      
       clearPins();
-
-      errors = JSON.parse(data);
-      if(!errors){
-        writePin(GREEN_PIN);  
+      
+      if(results > 0){
+        writePin(RED_PIN);  
       }
       else{
-        writePin(RED_PIN); 
+        writePin(GREEN_PIN); 
       }
-      console.log("Errors found: " + errorsExist);
-  
+      console.log("Results: " + results);
     });
-  });
+
+  }).on('error', function(e) {
+      console.log("Got error: ", e);
+      writePin(BLUE_PIN); 
+});
+
 };
 
 setStatusBeacon();
