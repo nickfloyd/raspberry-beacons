@@ -50,35 +50,30 @@ Update the package index
 
 ```
 sudo apt-get update
-
 ```
 
 Install the newest versions of all of the packages
 
 ```
 sudo apt-get upgrade
-
 ```
 
 Pull down the latest version of Node
 
 ```
 wget http://node-arm.herokuapp.com/node_latest_armhf.deb
-
 ```
 
 Install it...
 
 ```
 sudo dpkg -i node_latest_armhf.deb
-
 ```
 
 Verify
 
 ```
 pi@raspberrypi ~ $ node -v
-
 ```
 
 **Enable GPIO **
@@ -95,7 +90,6 @@ cd quick2wire-gpio-admin
 make
 sudo make install
 sudo adduser $USER gpio
-
 ```
 
 Then simply logout and log back in.
@@ -103,17 +97,72 @@ Then simply logout and log back in.
 **Installing pi-gpio**
 
 ```
-npm install pi-gpio
-
+npm install pi-gpio -g
 ```
 
 You now have enough of an environment to run the ledborg test harness I have. This is going to help you know if you are going to need to modify gpio-admin and pi-gpio for your given environment.
+
+Before proceeding you can go down to the troubleshooting steps and go through 
 
 ** Getting the beacon setup **
 
 From the terminal:
 
 ```
-git clone 
+git clone https://github.com/nickfloyd/raspberry-beacons.git
+
+cd raspberry-beacons/test_harness/
+
+node ledborg.js
+```
+
+If all is well you'll see the led on the ledborg board shine blue.  If not go through the troubleshooting steps below - you'll have it glowing blue in no time.
+
+# Troubleshooting
+
+**gpio-admin: failed to change group ownership of /sys/devices/virtual/gpio/gpio22/direction: No such file or directory**
+
+This is a know issue and there is currently a [PR on the quick2wire-gpio-admin](https://github.com/quick2wire/quick2wire-gpio-admin/pull/6) repo that addresses it. While we are waiting for that to get pulled in we can fix it ourselves.
+
+On your Pi navigate to:
 
 ```
+/home/pi/gpio-admin/src
+```
+
+Open and modify the ```gpio-admin.c``` file:
+
+Change this:
+
+```
+int size = snprintf(path, PATH_MAX, "/sys/devices/virtual/gpio/gpio%u/%s", pin, filename);
+```
+
+To this:
+
+```
+int size = snprintf(path, PATH_MAX, "/sys/class/gpio/gpio%u/%s", pin, filename);
+```
+
+Once you are done you will have to rebuid and install gpio-admin. Navigate to /home/pi/gpio-admin and execute the following:
+
+```
+make
+sudo make install 
+```
+
+In addition to this change the same type of [issue](https://github.com/rakeshpai/pi-gpio/pull/34) exists in the pi-gpio package.  Simply navigate to /home/pi/node_modules/pi-gpio.  Open and modify the ```pi-gpio.js``` file:
+
+Change this:
+
+```
+sysFsPath = "/sys/devices/virtual/gpio";
+```
+
+To this:
+
+```
+sysFsPath = "/sys/class/gpio";
+```
+
+Save the file and try the harness again.
