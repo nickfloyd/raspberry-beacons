@@ -2,7 +2,7 @@
 
 The intent of this is to provide a quick, simple, fun and inexpensive alerting beacon that can be connected to any type of service and be used as a visual notification that "something" is happening.
 
-Ok, so the more concrete use is for when you have a need for a visual queue, like your latest build has hit production, your site goes down and you've turned your devices to "silent", or you want to know when a specific application crosses some threshold.  The big boys use huge LED monitors to do the same but you and I know that it can all be done with just one LED.
+The more concrete use for this is when you have a need for a visual queue, like your latest build has hit production, your site goes down and you've turned your devices to "silent", or you want to know when a specific application crosses some threshold.  The big boys use huge LED monitors to do the same but you and I know that it can all be done with just one LED.
 
 # Hardware
 
