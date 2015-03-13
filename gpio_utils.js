@@ -2,16 +2,9 @@ var gpio = require("pi-gpio");
 var RED_PIN = 11, GREEN_PIN = 13, BLUE_PIN = 15;
 
 function closePinIfOpen(pin){
-
-	gpio.read(pin, function(err, value){
-		if(err) return;
-		if(value > 0){
-		    	gpio.close(pin, function(err){
-				if(err) console.log(pin + " cannot be  closed!")
-			});
-		}
-	});
-
+  gpio.close(pin, function(err){
+  	if(err) console.log(pin + " cannot be  closed!")
+  });
 }
 
 exports.clearPins = function(){
