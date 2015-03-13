@@ -151,7 +151,13 @@ make
 sudo make install 
 ```
 
-In addition to this change the same type of [issue](https://github.com/rakeshpai/pi-gpio/pull/34) exists in the pi-gpio package.  Simply navigate to /home/pi/node_modules/pi-gpio.  Open and modify the ```pi-gpio.js``` file:
+In addition to this change the same type of [issue](https://github.com/rakeshpai/pi-gpio/pull/34) exists in the pi-gpio package.  Simply navigate to:
+
+```
+ /home/pi/node_modules/pi-gpio
+```   
+
+Open and modify the ```pi-gpio.js``` file:
 
 Change this:
 
