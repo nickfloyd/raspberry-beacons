@@ -24,7 +24,7 @@ var RED_PIN = 11, GREEN_PIN = 13, BLUE_PIN = 15;
 var intervalInMills = 100000;
 
 //NRQL query URL encoded from https://insights.newrelic.com/accounts/[Your_Account]/manage/api_keys
-var query = "SELECT%20count(exception)%20FROM%20NewRelic_AzurePortal_APM_Requests%20WHERE%20application%20LIKE%20'NR-Stamp%25'%20AND%20exception%20IS%20NOT%20NULL%20SINCE%201%20day%20ago%20limit%2050";
+var query = "SELECT%20count(exception)%20FROM%20NewRelic_AzurePortal_APM_Requests%20WHERE%20application%20LIKE%20'NR-Stamp%25'%20AND%20exception%20IS%20NOT%20NULL%20SINCE%201%20hour%20ago%20limit%2050";
 var fullPath = "/v1/accounts/" + newrelicAccountId + "/query?nrql=" + query
 
 var insightsRequest = {
