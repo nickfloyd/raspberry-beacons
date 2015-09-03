@@ -201,3 +201,8 @@ sysFsPath = "/sys/class/gpio";
 ```
 
 Save the file and try the harness again.
+
+
+#Guidelines for contributing
+
+Please read the [guidelines for contributing](GUIDELINES_FOR_CONTRIBUTING.md) to make sure you and others have an amazing experience when giving back to OSS. 
